@@ -1,0 +1,18 @@
+random=$(cat /dev/urandom | base64 | tr -dc '0-9a-z' | head -c5)
+echo $random
+
+aws s3api create-bucket \
+--bucket qa-bucket-$random \
+--region us-west-2 \
+--create-bucket-configuration LocationConstraint=us-west-2
+
+aws s3api list-buckets --query "Buckets[?starts_with(Name, 'qa-bucket-')].Name"
+
+terraform init
+terraform state list
+terraform apply
+terraform state list
+terraform import aws_s3_bucket.bucket1 qa-bucket-crby3
+terraform state list
+terraform state show aws_s3_bucket.bucket1
+terraform plan

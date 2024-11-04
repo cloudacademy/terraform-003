@@ -1,0 +1,22 @@
+terraform init
+terraform init -upgrade
+
+terraform init -h
+terraform init -help
+terraform init --help
+
+tree -a
+cat .terraform.lock.hcl
+
+export TF_LOG=TRACE
+export TF_LOG=INFO
+unset TF_LOG
+
+rm -rf .terraform .terraform.lock.hcl
+
+terraform providers
+
+terraform workspace new test
+cat .terraform.lock.hcl
+
+terraform init

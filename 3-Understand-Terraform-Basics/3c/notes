@@ -1,0 +1,8 @@
+terraform show
+terraform state list
+terraform state show aws_vpc.vpc1
+ 
+aws ec2 describe-vpcs --region us-west-2
+aws ec2 describe-vpcs --region us-east-1
+
+tree -a
