@@ -2,3 +2,5 @@ export TF_LOG=TRACE
 export TF_LOG=DEBUG
 export TF_LOG=INFO
 unset TF_LOG
+
+TRACE , DEBUG , INFO , WARN , ERROR and FATAL

@@ -1,12 +1,12 @@
-random=$(cat /dev/urandom | base64 | tr -dc '0-9a-z' | head -c5)
+random=$(cat /dev/urandom | base64 | tr -dc '0-9a-z' | head -c10)
 echo $random
 
 aws s3api create-bucket \
---bucket qa-bucket-$random \
+--bucket terraform-003-bucket-$random \
 --region us-west-2 \
 --create-bucket-configuration LocationConstraint=us-west-2
 
-aws s3api list-buckets --query "Buckets[?starts_with(Name, 'qa-bucket-')].Name"
+aws s3api list-buckets --query "Buckets[?starts_with(Name, 'terraform-003-bucket-')].Name"
 
 terraform init
 terraform state list
@@ -16,3 +16,12 @@ terraform import aws_s3_bucket.bucket1 qa-bucket-crby3
 terraform state list
 terraform state show aws_s3_bucket.bucket1
 terraform plan
+
+terraform console
+aws_s3_bucket.bucket1
+aws_s3_bucket.bucket1.server_side_encryption_configuration[0].rule[0].bucket_key_enabled
+
+terraform destroy
+terraform state list
+cat terraform.tfstate
+aws s3api list-buckets --query "Buckets[?starts_with(Name, 'terraform-003-bucket-')].Name"

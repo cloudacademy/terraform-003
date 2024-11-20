@@ -19,6 +19,16 @@ resource "aws_s3_bucket" "bucket1" {
     Name        = "terraform-003-bucket-h54cg7vbn6"
     Environment = "Dev"
     Team        = "DevOps"
-    TechStack   = "Terraform"
+  }
+}
+
+resource "aws_s3_bucket" "bucket2" {
+  bucket = "terraform-003-bucket-h54cg7000"
+
+  tags = {
+    Name = "terraform-003-bucket-h54cg7000"
+
+    Environment = "Dev"
+    Team        = "DevOps"
   }
 }

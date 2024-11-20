@@ -1,0 +1,76 @@
+brew tap hashicorp/tap
+brew install hashicorp/tap/vault
+
+export VAULT_ADDR='http://0.0.0.0:8200'
+vault server -dev -dev-listen-address="0.0.0.0:8200"
+
+http://localhost:8200
+
+Token
+hvs.1234abcd1234abcd1234abcd
+
+==================
+
+export VAULT_ADDR='http://0.0.0.0:8200'
+
+vault policy write terraform - <<EOF
+path "*" {
+  capabilities = ["list", "read"]
+}
+
+path "secrets/data/*" {
+  capabilities = ["create", "read", "update", "delete", "list"]
+}
+
+path "kv/data/*" {
+  capabilities = ["create", "read", "update", "delete", "list"]
+}
+
+
+path "secret/data/*" {
+  capabilities = ["create", "read", "update", "delete", "list"]
+}
+
+path "auth/token/create" {
+capabilities = ["create", "read", "update", "list"]
+}
+EOF
+
+
+
+vault write auth/approle/role/terraform \
+secret_id_ttl=10m \
+token_num_uses=10 \
+token_ttl=20m \
+token_max_ttl=30m \
+secret_id_num_uses=40 \
+token_policies=terraform
+
+
+vault read auth/approle/role/terraform/role-id
+Key        Value
+---        -----
+role_id    1234abcd1234abcd1234abcd
+
+
+vault write -f auth/approle/role/terraform/secret-id
+Key                   Value
+---                   -----
+secret_id             1234abcd1234abcd1234abcd
+secret_id_accessor    1234abcd1234abcd1234abcd
+secret_id_num_uses    40
+secret_id_ttl         10m
+
+
+vault token create -policy=terraform
+Key                  Value
+---                  -----
+token                hvs.1234abcd1234abcd1234abcd
+token_accessor       1234abcd1234abcd1234abcd
+token_duration       768h
+token_renewable      true
+token_policies       ["default" "terraform"]
+identity_policies    []
+policies             ["default" "terraform"]
+
+export VAULT_TOKEN=hvs.1234abcd1234abcd1234abcd
